@@ -1,0 +1,116 @@
+# Schema mapping for flexible column name handling
+# Maps various column name variations to standard field names
+
+parcel_id:
+  - "Parcel ID"
+  - "parcel_id"
+  - "invoiceParcel_id"
+  - "Parcel_ID"
+
+order_id:
+  - "Order ID"
+  - "order_id"
+  - "invoice_id"
+  - "Order_ID"
+
+warehouse:
+  - "Warehouse"
+  - "warehouse"
+  - "name_en"
+
+country:
+  - "Country"
+  - "country"
+  - "country_name"
+
+city:
+  - "City"
+  - "city"
+
+area:
+  - "Area"
+  - "area"
+  - "area_name"
+
+order_status:
+  - "Order Status"
+  - "order_status"
+  - "Status"
+
+parcel_status:
+  - "parcelStatus_name"
+  - "parcel_status"
+  - "status"
+
+order_date:
+  - "Order Date"
+  - "order_date"
+  - "Datetime of CDate_Kuwait"
+
+parcel_date:
+  - "Parcel Date"
+  - "parcel_date"
+
+delivery_date:
+  - "delivery_date"
+  - "parcel_delivery_date"
+
+customer_name:
+  - "Customer Name"
+  - "customer_name"
+
+phone_number:
+  - "Phone Number"
+  - "phone_number"
+
+payment_method:
+  - "PaymentMethod"
+  - "payment_method"
+
+price:
+  - "Price"
+  - "price"
+
+collector:
+  - "Collector"
+  - "collector"
+
+preparer:
+  - "Preparer"
+  - "preparer"
+
+driver:
+  - "Driver"
+  - "driver"
+
+start_time:
+  - "Start time"
+  - "start_time"
+
+finish_time:
+  - "Finish Time"
+  - "finish_time"
+
+duration:
+  - "Duration(min)"
+  - "duration"
+
+item_count:
+  - "invoiceParcel_id Count"
+  - "item_count"
+
+ticket_id:
+  - "Ticket ID"
+  - "ticket_id"
+
+contact_type:
+  - "Contact Type"
+  - "contact_type"
+
+contact_type_2:
+  - "Contact Type 2"
+  - "contact_type_2"
+
+contact_type_3:
+  - "Contact Type 3"
+  - "contact_type_3"

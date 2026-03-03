@@ -1,0 +1,98 @@
+warehouses:
+  Kuwait:
+    timezone: Asia/Kuwait
+    country_code: KW
+    shift_start: "10:00"
+    shift_end: "23:00"
+    cutoff_time: "21:00"
+    default_delivery_sla_hours: 4
+    ramadan:
+      enabled: true
+      date_ranges:
+        - { start: "2026-02-18", end: "2026-03-19" }
+      shift_start: "12:00"
+      cutoff_time: "19:00"
+  
+  Riyadh:
+    timezone: Asia/Riyadh
+    country_code: SA
+    shift_start: "10:00"
+    shift_end: "23:00"
+    cutoff_time: "21:00"
+    default_delivery_sla_hours: 4
+    ramadan:
+      enabled: true
+      date_ranges:
+        - { start: "2026-02-18", end: "2026-03-19" }
+      shift_start: "12:00"
+      cutoff_time: "19:00"
+  
+  Dammam:
+    timezone: Asia/Riyadh
+    country_code: SA
+    shift_start: "10:00"
+    shift_end: "23:00"
+    cutoff_time: "21:00"
+    default_delivery_sla_hours: 4
+    ramadan:
+      enabled: true
+      date_ranges:
+        - { start: "2026-02-18", end: "2026-03-19" }
+      shift_start: "12:00"
+      cutoff_time: "19:00"
+  
+  Jeddah:
+    timezone: Asia/Riyadh
+    country_code: SA
+    shift_start: "10:00"
+    shift_end: "23:00"
+    cutoff_time: "21:00"
+    default_delivery_sla_hours: 4
+    ramadan:
+      enabled: true
+      date_ranges:
+        - { start: "2026-02-18", end: "2026-03-19" }
+      shift_start: "12:00"
+      cutoff_time: "19:00"
+  
+  Qatar:
+    timezone: Asia/Qatar
+    country_code: QA
+    shift_start: "10:00"
+    shift_end: "23:00"
+    cutoff_time: "21:00"
+    default_delivery_sla_hours: 4
+    ramadan:
+      enabled: true
+      date_ranges:
+        - { start: "2026-02-18", end: "2026-03-19" }
+      shift_start: "12:00"
+      cutoff_time: "19:00"
+  
+  UAE:
+    timezone: Asia/Dubai
+    country_code: AE
+    shift_start: "10:00"
+    shift_end: "23:00"
+    cutoff_time: "21:00"
+    default_delivery_sla_hours: 4
+    ramadan:
+      enabled: true
+      date_ranges:
+        - { start: "2026-02-18", end: "2026-03-19" }
+      shift_start: "12:00"
+      cutoff_time: "19:00"
+  
+  Bahrain:
+    timezone: Asia/Bahrain
+    country_code: BH
+    shift_start: "10:00"
+    shift_end: "23:00"
+    cutoff_time: "21:00"
+    default_delivery_sla_hours: 4
+    ramadan:
+      enabled: true
+      date_ranges:
+        - { start: "2026-02-18", end: "2026-03-19" }
+      shift_start: "12:00"
+      cutoff_time: "19:00"
