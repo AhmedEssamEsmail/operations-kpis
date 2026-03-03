@@ -250,6 +250,17 @@
             <div class="chart-container">
                 <div id="staffCharts"></div>
             </div>
+            
+            <!-- Summary Tables Section -->
+            <div class="chart-container">
+                <h3 style="margin-bottom: 1rem;">📋 DOD Summary Table</h3>
+                <div id="dodSummaryTable" style="overflow-x: auto;"></div>
+            </div>
+            
+            <div class="chart-container">
+                <h3 style="margin-bottom: 1rem;">📍 Waiting Address Breakdown</h3>
+                <div id="waTable" style="overflow-x: auto;"></div>
+            </div>
         </div>
     </div>
     
@@ -342,9 +353,51 @@
                     Plotly.newPlot(div, chart.chart.data, chart.chart.layout);
                 });
                 
+                // Load DOD Summary Table
+                const dodTableResponse = await fetch('/dashboard/dod-summary-table');
+                const dodTableData = await dodTableResponse.json();
+                renderTable('dodSummaryTable', dodTableData);
+                
+                // Load Waiting Address Table
+                const waTableResponse = await fetch('/dashboard/waiting-address-table');
+                const waTableData = await waTableResponse.json();
+                renderTable('waTable', waTableData);
+                
             } catch (error) {
                 console.error('Error loading charts:', error);
             }
+        }
+        
+        function renderTable(containerId, tableData) {
+            const container = document.getElementById(containerId);
+            
+            if (!tableData.columns || !tableData.data) {
+                container.innerHTML = '<p>No data available</p>';
+                return;
+            }
+            
+            let html = '<table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">';
+            
+            // Header
+            html += '<thead><tr style="background: #667eea; color: white;">';
+            tableData.columns.forEach(col => {
+                html += `<th style="padding: 0.75rem; text-align: left; border: 1px solid #ddd;">${col}</th>`;
+            });
+            html += '</tr></thead>';
+            
+            // Body
+            html += '<tbody>';
+            tableData.data.forEach((row, idx) => {
+                const bgColor = idx % 2 === 0 ? '#f9f9f9' : 'white';
+                html += `<tr style="background: ${bgColor};">`;
+                tableData.columns.forEach(col => {
+                    html += `<td style="padding: 0.75rem; border: 1px solid #ddd;">${row[col] || ''}</td>`;
+                });
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            
+            container.innerHTML = html;
         }
     </script>
 </body>

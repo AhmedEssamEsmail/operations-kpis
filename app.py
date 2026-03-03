@@ -354,6 +354,74 @@ def staff_productivity():
     return jsonify({'charts': charts})
 
 
+@app.route('/dashboard/dod-summary-table')
+def dod_summary_table():
+    """DOD Summary Table with daily metrics"""
+    if 'delivery_details' not in processed_data:
+        return jsonify({'error': 'No data loaded'}), 400
+    
+    df = processed_data['delivery_details'].copy()
+    
+    # Parse delivery date
+    if 'delivery_date' in df.columns:
+        df['delivery_date'] = pd.to_datetime(df['delivery_date'], errors='coerce')
+        df['date'] = df['delivery_date'].dt.date
+    else:
+        return jsonify({'error': 'delivery_date column not found'}), 400
+    
+    # Calculate on-time status (simplified - you'd need SLA logic for real calculation)
+    # For now, assume we have an 'sla_status' column or calculate based on available data
+    df['is_on_time'] = True  # Placeholder - replace with actual SLA calculation
+    df['is_late'] = False
+    
+    # Group by date
+    summary = df.groupby('date').agg({
+        'parcel_id': 'count',
+        'is_on_time': 'sum',
+        'is_late': 'sum'
+    }).reset_index()
+    
+    summary.columns = ['Date', 'Total Orders', 'On Time', 'Late']
+    summary['On Time %'] = ((summary['On Time'] / summary['Total Orders']) * 100).round(0).astype(int).astype(str) + '%'
+    
+    # Convert to dict for JSON response
+    return jsonify({
+        'columns': ['Date', 'Total Orders', 'On Time', 'Late', 'On Time %'],
+        'data': summary.to_dict('records')
+    })
+
+
+@app.route('/dashboard/waiting-address-table')
+def waiting_address_table():
+    """Waiting Address breakdown table by date"""
+    if 'delivery_details' not in processed_data:
+        return jsonify({'error': 'No data loaded'}), 400
+    
+    df = processed_data['delivery_details'].copy()
+    
+    if 'has_waiting_address' not in df.columns:
+        return jsonify({'error': 'Waiting Address detection not available'}), 400
+    
+    # Parse delivery date
+    if 'delivery_date' in df.columns:
+        df['delivery_date'] = pd.to_datetime(df['delivery_date'], errors='coerce')
+        df['date'] = df['delivery_date'].dt.date
+    else:
+        return jsonify({'error': 'delivery_date column not found'}), 400
+    
+    # Group by date and WA status
+    wa_summary = df.groupby(['date', 'has_waiting_address']).size().unstack(fill_value=0).reset_index()
+    wa_summary.columns = ['Date', 'Normal', 'Waiting Address']
+    
+    # Calculate impact percentage
+    wa_summary['WA Impact'] = ((wa_summary['Waiting Address'] / (wa_summary['Normal'] + wa_summary['Waiting Address'])) * 100).round(0).astype(int).astype(str) + '%'
+    
+    return jsonify({
+        'columns': ['Date', 'Waiting Address Count', 'WA Impact'],
+        'data': wa_summary[['Date', 'Waiting Address', 'WA Impact']].to_dict('records')
+    })
+
+
 @app.route('/export/<dataset>')
 def export_csv(dataset):
     """Export dataset as CSV"""
