@@ -8,6 +8,7 @@ python-dateutil>=2.8.2
 # Web framework
 flask>=3.0.0
 plotly>=5.18.0
+gunicorn>=21.2.0
 
 # Optional: for better performance
 fastparquet>=2023.10.0
