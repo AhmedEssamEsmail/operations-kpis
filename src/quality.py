@@ -106,6 +106,8 @@ class QualityValidator:
             result['errors'].append("Required columns not found")
             return result
         
+        # Convert to string first to handle any numeric values
+        fact['order_status'] = fact['order_status'].astype(str)
         delivered_mask = fact['order_status'].str.lower().isin(['delivered', 'complete', 'completed'])
         delivered_count = delivered_mask.sum()
         missing_timestamp = fact[delivered_mask & fact['delivered_at_local'].isna()]

@@ -26,9 +26,10 @@ class LocationMapper:
         
         # Normalize for case-insensitive matching
         if not sla_config_df.empty:
-            self.sla_config_df['warehouse'] = self.sla_config_df['warehouse'].str.strip().str.title()
-            self.sla_config_df['city'] = self.sla_config_df['city'].str.strip().str.title()
-            self.sla_config_df['area'] = self.sla_config_df['area'].str.strip().str.title()
+            # Convert to string first to handle any numeric values
+            self.sla_config_df['warehouse'] = self.sla_config_df['warehouse'].astype(str).str.strip().str.title()
+            self.sla_config_df['city'] = self.sla_config_df['city'].astype(str).str.strip().str.title()
+            self.sla_config_df['area'] = self.sla_config_df['area'].astype(str).str.strip().str.title()
     
     def map_zone(self, warehouse: str, city: str, area: Optional[str] = None) -> Optional[str]:
         """Map location to zone
