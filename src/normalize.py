@@ -42,12 +42,15 @@ class DataNormalizer:
             if col not in df.columns:
                 continue
             
-            if df[col].dtype == 'object':
-                # Trim whitespace
-                df[col] = df[col].str.strip()
-                
-                # Normalize multiple spaces to single space
-                df[col] = df[col].str.replace(r'\s+', ' ', regex=True)
+            # Convert to string first, then apply string operations
+            df[col] = df[col].astype(str)
+            # Replace 'nan' string with actual NaN
+            df[col] = df[col].replace('nan', np.nan)
+            
+            # Apply string operations only on non-null values
+            df[col] = df[col].apply(
+                lambda x: re.sub(r'\s+', ' ', x).strip() if pd.notna(x) and x != '' else np.nan
+            )
         
         logger.info(f"Standardized text for {len(columns)} columns")
         return df
@@ -60,9 +63,12 @@ class DataNormalizer:
         location_cols = ['city', 'area']
         for col in location_cols:
             if col in df.columns:
-                # Basic normalization
-                df[col] = df[col].str.strip()
-                df[col] = df[col].str.title()  # Title case
+                # Convert to string first to handle numeric values
+                df[col] = df[col].astype(str)
+                # Replace 'nan' string with actual NaN
+                df[col] = df[col].replace('nan', np.nan)
+                # Basic normalization only on non-null values
+                df[col] = df[col].apply(lambda x: x.strip().title() if pd.notna(x) and x != '' else np.nan)
         
         # Apply location mapping if available
         if self.location_map is not None and not self.location_map.empty:
@@ -75,6 +81,14 @@ class DataNormalizer:
         """Apply location mapping table to standardize city/area names"""
         if 'warehouse' not in df.columns or 'city' not in df.columns:
             return df
+        
+        # Ensure columns are strings
+        df['warehouse'] = df['warehouse'].astype(str)
+        df['city'] = df['city'].astype(str)
+        if 'area' in df.columns:
+            df['area'] = df['area'].astype(str)
+        else:
+            df['area'] = ''
         
         # Create lookup key
         df['_lookup_key'] = (
@@ -206,10 +220,16 @@ class DataNormalizer:
         if warehouse_column not in df.columns:
             return df
         
-        # Remove common suffixes and normalize
-        df[warehouse_column] = df[warehouse_column].str.replace(r'\s+warehouse\s*$', '', case=False, regex=True)
-        df[warehouse_column] = df[warehouse_column].str.strip()
-        df[warehouse_column] = df[warehouse_column].str.title()
+        # Convert to string first to handle numeric values
+        df[warehouse_column] = df[warehouse_column].astype(str)
+        # Replace 'nan' string with actual NaN
+        df[warehouse_column] = df[warehouse_column].replace('nan', np.nan)
+        
+        # Remove common suffixes and normalize only on non-null values
+        df[warehouse_column] = df[warehouse_column].apply(
+            lambda x: re.sub(r'\s+warehouse\s*$', '', x, flags=re.IGNORECASE).strip().title() 
+            if pd.notna(x) and x != '' else np.nan
+        )
         
         logger.info(f"Normalized warehouse names in column: {warehouse_column}")
         return df

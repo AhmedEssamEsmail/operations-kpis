@@ -89,7 +89,8 @@ class SLAEngine:
         
         df['sla_status'] = 'Open'
         
-        # Check if parcel is delivered
+        # Check if parcel is delivered - convert to string first to handle any numeric values
+        df[order_status_col] = df[order_status_col].astype(str)
         delivered_mask = df[order_status_col].str.lower().isin(['delivered', 'complete', 'completed'])
         
         # For delivered parcels, compare actual vs expected

@@ -195,6 +195,8 @@ class FactTableBuilder:
         
         # Check delivered parcels missing delivered_at
         if 'order_status' in fact.columns and 'delivered_at_local' in fact.columns:
+            # Convert to string first to handle any numeric values
+            fact['order_status'] = fact['order_status'].astype(str)
             delivered_mask = fact['order_status'].str.lower().isin(['delivered', 'complete'])
             missing_delivery_time = fact[delivered_mask & fact['delivered_at_local'].isna()]
             if len(missing_delivery_time) > 0:
