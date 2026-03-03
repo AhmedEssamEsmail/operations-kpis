@@ -14,7 +14,11 @@ from src.normalize import normalize_dataframe
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
-app.config['UPLOAD_FOLDER'] = tempfile.mkdtemp()
+
+# Use /tmp for serverless environments (Vercel)
+import os
+upload_folder = os.environ.get('VERCEL') and '/tmp' or tempfile.mkdtemp()
+app.config['UPLOAD_FOLDER'] = upload_folder
 
 # Global storage for processed data
 processed_data = {}
@@ -350,4 +354,4 @@ def export_csv(dataset):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000)
