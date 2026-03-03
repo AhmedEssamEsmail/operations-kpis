@@ -37,11 +37,29 @@ class DataIngester:
         return result['encoding'] or 'utf-8'
     
     def read_csv(self, file_path: Path, **kwargs) -> pd.DataFrame:
-        """Read CSV file with encoding detection"""
+        """Read CSV file with encoding detection and error handling"""
         encoding = self.detect_encoding(file_path)
+        
+        # Try with detected encoding first
         try:
             df = pd.read_csv(file_path, encoding=encoding, **kwargs)
-            logger.info(f"Successfully read CSV: {file_path.name} ({len(df)} rows)")
+            logger.info(f"Successfully read CSV: {file_path.name} ({len(df)} rows) with {encoding} encoding")
+            return df
+        except UnicodeDecodeError:
+            logger.warning(f"Failed with {encoding}, trying utf-8 with error handling")
+            
+        # Fallback to utf-8 with error handling
+        try:
+            df = pd.read_csv(file_path, encoding='utf-8', errors='ignore', **kwargs)
+            logger.info(f"Successfully read CSV: {file_path.name} ({len(df)} rows) with utf-8 (errors ignored)")
+            return df
+        except Exception:
+            logger.warning(f"Failed with utf-8, trying latin-1")
+            
+        # Final fallback to latin-1 (accepts all byte values)
+        try:
+            df = pd.read_csv(file_path, encoding='latin-1', **kwargs)
+            logger.info(f"Successfully read CSV: {file_path.name} ({len(df)} rows) with latin-1 encoding")
             return df
         except Exception as e:
             logger.error(f"Error reading CSV {file_path}: {e}")
