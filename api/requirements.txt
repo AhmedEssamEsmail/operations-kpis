@@ -1,0 +1,7 @@
+# Minimal dependencies for Vercel serverless
+flask>=3.0.0
+pandas>=2.0.0
+plotly>=5.18.0
+pyyaml>=6.0
+pytz>=2023.3
+python-dateutil>=2.8.2

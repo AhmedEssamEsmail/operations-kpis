@@ -1,0 +1,14 @@
+# Ignore unnecessary files for deployment
+.kiro/
+tests/
+*.pyc
+__pycache__/
+.git/
+.gitignore
+*.md
+!README.md
+.vscode/
+.idea/
+*.log
+out/
+output/

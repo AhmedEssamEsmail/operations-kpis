@@ -8,17 +8,33 @@ import json
 from pathlib import Path
 import tempfile
 import os
+import sys
 
-from src.ingest import DataIngester, DatasetLoader
-from src.normalize import normalize_dataframe
+# Add error handling for imports
+try:
+    from src.ingest import DataIngester, DatasetLoader
+    from src.normalize import normalize_dataframe
+except ImportError as e:
+    print(f"Import error: {e}")
+    print(f"Python path: {sys.path}")
+    print(f"Current directory: {os.getcwd()}")
+    # Try alternative import
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from src.ingest import DataIngester, DatasetLoader
+        from src.normalize import normalize_dataframe
+    except ImportError:
+        raise
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
 
 # Use /tmp for serverless environments (Vercel)
-import os
-upload_folder = os.environ.get('VERCEL') and '/tmp' or tempfile.mkdtemp()
+upload_folder = '/tmp' if os.environ.get('VERCEL') else tempfile.mkdtemp()
 app.config['UPLOAD_FOLDER'] = upload_folder
+
+# Ensure upload folder exists
+os.makedirs(upload_folder, exist_ok=True)
 
 # Global storage for processed data
 processed_data = {}
